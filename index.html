@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>Lecture notes</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script defer src="/speech-recorder.js"></script>
+  <script defer src="/app.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="lecture-heading"><button id="history-toggle" class="icon-button" type="button" aria-label="Lecture history" aria-controls="history-drawer" aria-expanded="false"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><h1 id="lecture-title" tabindex="0" title="Double-click to rename; or press Enter">Lecture notes</h1><input id="lecture-rename" aria-label="Lecture name" maxlength="50" hidden></div>
+    <div class="record-controls"><span id="timer" class="timer" aria-label="Recording duration">00:00:00</span><button id="record" type="button">Start recording</button><button id="generate" class="primary" type="button">Generate notes</button></div>
+  </header>
+  <aside id="history-drawer" aria-labelledby="history-heading" hidden><div class="drawer-heading"><h2 id="history-heading">Lectures</h2><button id="history-close" class="icon-button" type="button" aria-label="Close lecture history">×</button></div><button id="new-lecture" type="button">+ New lecture</button><nav id="lecture-list" aria-label="Previous lectures"></nav></aside>
+  <main>
+    
+    <div class="workspace">
+      <section class="notes-panel" aria-label="Lecture materials, transcript and notes">
+        <div class="panel-heading"><div class="view-controls"><button id="view-notes" class="view-button" type="button" aria-pressed="true" aria-controls="result">Notes</button><button id="view-materials" class="view-button" type="button" aria-pressed="false" aria-controls="materials-panel">Materials</button><button id="view-transcript" class="view-button" type="button" aria-pressed="false" aria-controls="transcript-panel">Transcripts</button></div><div id="result-actions" class="result-actions" hidden><button id="toggle-preview" class="latex-toggle" type="button" role="switch" aria-checked="false" aria-label="Show LaTeX source" aria-controls="notes-preview notes-editor"><span>LaTeX</span><span class="toggle-track" aria-hidden="true"></span></button><a id="download-notes" class="download-icon" href="#" download aria-label="Download notes as a LaTeX file" title="Download .tex"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m-5-5 5 5 5-5M5 16v4h14v-4"/></svg></a></div></div>
+        <section id="materials-panel" class="materials-panel" hidden aria-label="Lecture materials">
+          <h2>1. Add materials</h2>
+          <div class="uploads">
+            <div><div class="upload-title">PDF slides<span class="subtle">Available on Blackboard</span></div><div class="file-picker"><button id="choose-slides" type="button" aria-label="Choose slide PDF">Choose file</button><span id="slides-filename" class="subtle">No file chosen</span><input id="slides" type="file" accept=".pdf,application/pdf" aria-label="Slides" hidden></div></div>
+            <div><div class="upload-title">Example notes <span class="subtle">Optional · saved in this browser</span></div><div class="file-picker"><button id="choose-styles" type="button" aria-label="Choose example notes">Choose files</button><span class="subtle">Up to 3 TXT / TEX</span><input id="styles" type="file" accept=".txt,.tex" aria-label="Example notes" multiple hidden></div><ul id="style-list" class="file-list" aria-label="Saved example notes"></ul></div>
+          </div>
+          <div class="transcript-choice"><h2>2. Add a transcript</h2>
+            <div class="record-alternative"><div class="record-option"><button id="record-from-materials" type="button">Start recording</button><span id="materials-record-status" class="timer" aria-label="Recording duration">00:00:00</span></div><span class="subtle">OR</span><div class="file-picker"><button id="choose-transcripts" type="button" aria-label="Choose transcripts">Choose files</button><span id="transcripts-filename" class="subtle">No files chosen</span><input id="transcripts" type="file" accept=".txt,text/plain" aria-label="Transcripts" multiple hidden></div></div>
+          </div>
+        </section>
+        <section id="result" class="result" aria-label="Generated notes">
+          <div id="notes-empty" class="empty"><p>Add materials or record a lecture, then generate notes.</p><div class="empty-actions"><div class="upload-action"><button id="notes-upload-pdf" type="button">Upload PDF slides</button><span id="pdf-uploaded" class="upload-tick" role="status" aria-label="PDF slides uploaded" hidden>✓</span></div><div class="upload-action"><button id="notes-upload-transcript" type="button">Upload transcript</button><span id="transcript-uploaded" class="upload-tick" role="status" aria-label="Transcript uploaded" hidden>✓</span></div></div></div>
+          <article id="notes-preview" aria-label="Notes preview"></article>
+          <textarea id="notes-editor" aria-label="LaTeX notes" rows="25" readonly hidden></textarea>
+        </section>
+        <section id="transcript-panel" class="transcript-panel" hidden aria-label="Transcript">
+          <div class="label-row"><label for="live">Transcript</label><button id="download-transcript" class="text-button" type="button" disabled>Download TXT</button></div>
+          <p id="record-status" class="hint" role="status">Speech-to-text · 2-hour limit</p>
+          <textarea id="live" rows="15" placeholder="Record a lecture or paste a transcript…"></textarea>
+        <div class="important"><label for="important">Important points</label><textarea id="important" rows="3" placeholder="Things to include in your notes…"></textarea></div>
+        </section>
+      </section>
+      <aside class="chat-panel" aria-labelledby="chat-title">
+        <div class="panel-heading"><h2 id="chat-title">Chat</h2></div>
+        <div id="messages" class="messages" role="log" aria-live="polite"><p id="chat-empty" class="empty">Add slides or a transcript to get started.</p></div>
+        <form id="chat-form"><label class="sr-only" for="question">Your question</label><div class="chat-composer"><textarea id="question" rows="2" maxlength="8000" placeholder="Ask a question…" required></textarea><button id="ask" type="submit" aria-label="Send message" title="Send message"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5m-6 6 6-6 6 6"/></svg></button></div></form>
+      </aside>
+    </div>
+  </main>
+</body>
+</html>
